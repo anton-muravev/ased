@@ -6,7 +6,6 @@ Created on Wed Apr 11 17:46:18 2018
 @author: muravev
 """
 import numpy as np
-import py3nvml
 
 def multiclass_matthews(confmat): 
     """Computes Matthews coefficient from the multiclass confusion matrix.
@@ -65,32 +64,3 @@ def oneclass_matthews(confmat, refclass):
         return -2
     else:
         return (tp*tn-fp*fn)/np.sqrt(denom)
-
-def get_gpu_allocation(total_netcount, gpu_allowed):
-    #REMOVE THIS WHEN MOVED
-    """Obtains the allocation pattern of the networks between GPUs, assuming
-    independent training.
-    
-    Arguments
-    ----------
-    total_netcount: int
-        A total number of networks to be processed.
-    gpu_allowed: list of int
-        A list containing the identifiers of the GPUs that are allowed for 
-        consideration.
-    
-    Returns
-    ----------
-    A dictionary, where the keys are the GPU identifiers and the values are 
-    integers indicating how many networks that GPU should have allocated.
-    """
-    gpu_usable = gpu_allowed.copy()
-    free_gpus = py3nvml.get_free_gpus()
-    for i, k in enumerate(free_gpus):
-        if not k and i in gpu_allowed:
-            gpu_usable.remove(i)
-    each = np.int(total_netcount/len(gpu_usable))
-    output = {}
-    for k in gpu_usable:
-        output[k] = each
-    return output
