@@ -1,0 +1,5 @@
+*.pickle
+/data
+*.py[cod]
+__pycache__/
+.spyproject
